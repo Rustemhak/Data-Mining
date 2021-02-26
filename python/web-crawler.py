@@ -1,4 +1,5 @@
 import requests
+import psycopg2
 
 
 def take_200_posts(domain):
@@ -49,5 +50,26 @@ def get_top_100_word(domain):
     return top_words
 
 
+def add_to_db_top_100_word(group_name):
+    con = psycopg2.connect(
+        database="postgres",
+        user="postgres",
+        password="tak5353446512",
+        host="databasefordatamining.cttpobcopzft.us-east-1.rds.amazonaws.com",
+        port="5432"
+    )
+    cur = con.cursor()
+    cur.execute("truncate table top_100_words")
+    con.commit()
+    print("Database opened successfully")
+    top_100_words = get_top_100_word(group_name)
+    for item in top_100_words:
+        values = {'name': item[0], 'count': item[1]}
+        cur.execute("insert into top_100_words (name, count) values (%(name)s,%(count)s)",
+                    values
+                    )
+    con.commit()
+
+
 group_name = 'itis_kfu'
-print(get_top_100_word(group_name))
+add_to_db_top_100_word(group_name)
