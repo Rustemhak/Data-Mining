@@ -1,14 +1,18 @@
 import requests
 import psycopg2
+import configparser
 
 
-def take_posts(domain, count_post):
-    token = '378645243786452437864524f337f0dea0337863786452457b19ce45a551858c0473f14'
+def take_posts():
+    config = configparser.ConfigParser()
+    config.read('settings.ini')
+    token = config['VK']['token']
+    domain = config['VK']['domain']
     version = 5.126
     offset = 0
     all_posts = []
-
-    while offset < count_post:
+    count_posts = int(config['VK']['count_posts'])
+    while offset < count_posts:
         response = requests.get('https://api.vk.com/method/wall.get', params={
             'access_token': token,
             'v': version,
@@ -24,9 +28,9 @@ def take_posts(domain, count_post):
     return all_posts
 
 
-def create_dict_count_word(domain, count_post):
+def create_dict_count_word():
     dictionary = {}
-    all_posts = take_posts(domain, count_post)
+    all_posts = take_posts()
     for post in all_posts:
         text = post['text']
         words = text.split()
@@ -38,27 +42,32 @@ def create_dict_count_word(domain, count_post):
     return dictionary
 
 
-def add_to_db_count_word(group_name, count_post):
+def add_to_db_count_word():
+    config = configparser.ConfigParser()
+    config.read('settings.ini')
     con = psycopg2.connect(
-        database="postgres",
-        user="postgres",
-        password="tak5353446512",
-        host="databasefordatamining.cttpobcopzft.us-east-1.rds.amazonaws.com",
-        port="5432"
+        database=config['DB']['database'],
+        user=config['DB']['user'],
+        password=config['DB']['password'],
+        host=config['DB']['host'],
+        port=config['DB']['port']
     )
     cur = con.cursor()
     cur.execute("truncate table count_words")
     con.commit()
     print("Database opened successfully")
-    count_words = create_dict_count_word(group_name, count_post)
+    count_words = create_dict_count_word()
+    cnt = 0
     for name in count_words.keys():
+
         values = {'name': name, 'count': count_words[name]}
         cur.execute("insert into count_words (name, count) values (%(name)s,%(count)s)",
                     values
                     )
+        cnt += 1
+        if cnt > 5:
+            break
     con.commit()
 
 
-group_name = 'itis_kfu'
-count_post = 200
-add_to_db_count_word(group_name, count_post)
+add_to_db_count_word()
