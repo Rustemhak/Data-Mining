@@ -57,16 +57,12 @@ def add_to_db_count_word():
     con.commit()
     print("Database opened successfully")
     count_words = create_dict_count_word()
-    cnt = 0
     for name in count_words.keys():
 
         values = {'name': name, 'count': count_words[name]}
         cur.execute("insert into count_words (name, count) values (%(name)s,%(count)s)",
                     values
                     )
-        cnt += 1
-        if cnt > 5:
-            break
     con.commit()
 
 
