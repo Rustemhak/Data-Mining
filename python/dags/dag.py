@@ -2,16 +2,15 @@ import requests
 import psycopg2
 import configparser
 from airflow.models import DAG
-
 from datetime import datetime, timedelta
 from airflow.utils.dates import days_ago
-from airflow.operator.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 
 args = {
     'owner': 'airflow',
     'start_date': days_ago(1)
 }
-dag = DAG(dag_id='my_first_dag', default_args=args, schedule_interval=None)
+dag = DAG(dag_id='my_first_dag', default_args=args, schedule_interval='@daily')
 
 
 def take_posts():
