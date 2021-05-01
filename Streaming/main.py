@@ -1,5 +1,6 @@
 from random import randint, randrange
 from time import sleep
+from time import time
 
 
 class X:
@@ -69,19 +70,27 @@ if __name__ == '__main__':
             moment2 += v * v
         ans1 = moment2
         print('2-th moment  without AMS algorithm', ans1)
-
+        start_time = time()
         x_list = []
         gen_var1 = generate_variables(count1_var, begin, amount)
         for pos in gen_var1:
             x_list.append(X(pos, generated_list[pos], 1))
         ans2 = calc_2_moment_with_AMS(x_list, generated_list, amount)
+        end_time = time()
+        total_time = end_time - start_time
         print('2-th with AMS algorithm 100 variables', ans2)
         print('Accuracy with  100 variables: ', (1 - abs(ans2 - ans1) / ans1) * 100, '%')
+        print('Time of calculating: ', total_time, 's')
+        start_time = time()
         x_list = []
         gen_var2 = generate_variables(count2_var, begin, amount)
         for pos in gen_var2:
             x_list.append(X(pos, generated_list[pos], 1))
         ans3 = calc_2_moment_with_AMS(x_list, generated_list, amount)
+        end_time = time()
+        total_time = end_time - start_time
         print('2-th with AMS algorithm 500 variables', ans3)
         print('Accuracy 500 variables: ', (1 - abs(ans3 - ans1) / ans1) * 100, '%')
+        print('Time of calculating: ', total_time, 's')
+        print('\n')
         sleep(0.2)
