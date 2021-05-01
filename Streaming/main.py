@@ -58,7 +58,7 @@ if __name__ == '__main__':
     cnt_try = 0
     while True:
         cnt_try += 1
-        print('Попытка номер:', cnt_try)
+        print('Attempt number:', cnt_try)
         generated_list = generate(amount, begin, end)
         # print(get_dict(generated_list))
         map_of_gen = get_dict(generated_list)
