@@ -67,15 +67,21 @@ if __name__ == '__main__':
         moment2 = 0
         for v in map_of_gen.values():
             moment2 += v * v
-        print('2-th moment  without AMS algorithm', moment2)
+        ans1 = moment2
+        print('2-th moment  without AMS algorithm', ans1)
+
         x_list = []
         gen_var1 = generate_variables(count1_var, begin, amount)
         for pos in gen_var1:
             x_list.append(X(pos, generated_list[pos], 1))
-        print('2-th with AMS algorithm 100 variables', calc_2_moment_with_AMS(x_list, generated_list, amount))
+        ans2 = calc_2_moment_with_AMS(x_list, generated_list, amount)
+        print('2-th with AMS algorithm 100 variables', ans2)
+        print('Accuracy with  100 variables: ', (1 - abs(ans2 - ans1) / ans1) * 100, '%')
         x_list = []
         gen_var2 = generate_variables(count2_var, begin, amount)
         for pos in gen_var2:
             x_list.append(X(pos, generated_list[pos], 1))
-        print('2-th with AMS algorithm 500 variables', calc_2_moment_with_AMS(x_list, generated_list, amount))
+        ans3 = calc_2_moment_with_AMS(x_list, generated_list, amount)
+        print('2-th with AMS algorithm 500 variables', ans3)
+        print('Accuracy 500 variables: ', (1 - abs(ans3 - ans1) / ans1) * 100, '%')
         sleep(0.2)
