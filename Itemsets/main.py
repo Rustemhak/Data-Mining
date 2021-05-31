@@ -18,10 +18,7 @@ def find_frequent_itemsets():
     transactions, products = get_buckets()
     singletons, unsupported_items = get_frequent_singleton(transactions, products, support_s)
     doubletons = list(set(get_frequent_doubleton(transactions, products, support_s, unsupported_items)))
-    doubletons_itemsets = []
-    for i in range(len(doubletons)):
-        doubletons_itemsets.append((products[doubletons[i][0]], products[doubletons[i][1]]))
-    return singletons, doubletons_itemsets
+    return singletons, doubletons
 
 
 def get_frequent_singleton(transactions, products, support_s):
@@ -71,8 +68,10 @@ def get_frequent_doubleton(transactions, products, support_s, unsupported_items)
     frequent_doubletons = []
     for g in group_second:
         for p in g:
-            if products[p[0] - 1] not in unsupported_items and products[p[1] - 1] not in unsupported_items:
-                frequent_doubletons.append(p)
+            item1 = products[p[0] - 1]
+            item2 = products[p[1] - 1]
+            if item1 not in unsupported_items and item2 not in unsupported_items and item1 != item2:
+                frequent_doubletons.append((item1, item2))
     return frequent_doubletons
 
 
